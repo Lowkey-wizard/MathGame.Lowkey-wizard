@@ -1,10 +1,11 @@
-namespace GameMenu
+namespace MathGame
 {
-    using GameEngine;
-    internal class GameMenu
+    public partial class GameMenu
     {
-        internal void Menu()
+        public static void Menu()
         {
+            Console.WriteLine("Please enter your name:");
+            string? name = Console.ReadLine();
             Console.WriteLine("_________________________________");
             Console.WriteLine($"Hello {name}, today is {DateTime.Now:d}. Would you like to Play a math game?");
             Console.WriteLine(@"What game would you like to select below: 
@@ -19,16 +20,16 @@ namespace GameMenu
             switch (gameSelected)
             {
                 case "a":
-                    GameEngine.PlayAdditionGame();
+                    MathGame.GameEngine.PlayAdditionGame();
                     break;
                 case "s":
-                    GameEngine.PlaySubtractionGame();
+                    MathGame.GameEngine.PlaySubtractionGame();
                     break;
                 case "m":
-                    GameEngine.PlayMultiplicationGame();
+                    MathGame.GameEngine.PlayMultiplicationGame();
                     break;
                 case "d":
-                    GameEngine.PlayDivisionGame();
+                    MathGame.GameEngine.PlayDivisionGame();
                     break;
                 case "q":
                     Console.WriteLine("Goodbye!");
@@ -39,8 +40,6 @@ namespace GameMenu
                     Menu();
                     break;
             }
-
-            Console.ReadLine();
         }
 
     }

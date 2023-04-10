@@ -1,89 +1,155 @@
-namespace GameEngine
+namespace MathGame
 {
-    using GameMenu;
-    internal class GameEngine
+    public partial class GameEngine
     {
-            Random random = new Random();
+        
 
-        internal void EasyDiff()
-            {
-                if (PlayDivisionGame())
-                {
-                    int dividend = random.Next(26);
-                    int divisor = random.Next(1, 11);
-                }
-                else if (PlayMultiplicationGame())
-                {
-                    int factor1, factor2 = random.Next(11);
-                }
-                else
-                {
-                    double rnd1, rnd2 = random.Next(51);
-                }
-
-            }
-
-            internal void MedDiff()
-            {
-                if (PlayDivisionGame())
-                {
-                    int dividend = random.Next(51);
-                    int divisor = random.Next(1, 25);
-                }
-                else if (PlayMultiplicationGame())
-                {
-                    int factor1, factor2 = random.Next(51);
-                }
-                else
-                {
-                    double rnd1, rnd2 = random.Next(101);
-                }
-
-            }
-
-            internal void HardDiff()
-            {
-                if (PlayDivisionGame())
-                {
-                    int dividend = random.Next(101);
-                    int divisor = random.Next(1, 51);
-                }
-                else if (PlayMultiplicationGame())
-                {
-                    int factor1, factor2 = random.Next(101);
-                }
-                else
-                {
-                    double rnd1, rnd2 = random.Next(251);
-                }
-
-            }
-
-            internal void ReplayExit()
-            {
-                // repeat the game or exit
-                Console.WriteLine("Would you like to try again? (Y/N)");
-                string? response = Console.ReadLine();
-                if (response?.Trim().ToLower() == "y")
-                {
-                    // choose current method in use in Program.cs
-                }
-                else
-                {
-                    Console.WriteLine("Goodbye!");
-                    GameMenu.Menu();
-                }
-            }
-        internal void PlayAdditionGame()
+        static void DifficultyChoice()
         {
+            Console.WriteLine(@"What difficulty would you like to play at:
+            E - Easy
+            M - Medium
+            H - Hard");
+            string? diffSelected = Console.ReadLine()?.Trim().ToLowerInvariant();
+            switch (diffSelected)
+            {
+                case "e":
+                GameEngine.PlayGame("Easy");
+                break;
+                case "m":
+                GameEngine.PlayGame("Medium");
+                break;
+                case "h":
+                GameEngine.PlayGame("Hard");
+                break;
+                
+            }
+        } 
+
+        static void PlayGame(String difficultyLevel)
+        {
+            Random random = new Random();
+            if (PlayDivisionGame())
+            {
+                int dividend;
+                int divisor;
+
+                switch(difficultyLevel)
+                {
+                    case "Easy":
+                        dividend = random.Next(26);
+                        divisor = random.Next(1, 11);
+                        break;
+                    case "Medium":
+                        dividend = random.Next(51);
+                        divisor = random.Next(1, 25);
+                        break;
+                    case "Hard":
+                        dividend = random.Next(101);
+                        divisor = random.Next(1, 51);                       
+                        break;
+                    default:
+                        throw new ArgumentException("Invalid difficulty level.");
+                }
+                PlayDivisionGame(dividend, divisor);
+
+            }
+            else if (PlayMultiplicationGame())
+            {
+                int factor1;
+                int factor2;
+
+                switch(difficultyLevel)
+                {
+                    case "Easy":
+                        factor1 = random.Next(11);
+                        factor2 = random.Next(11);
+                        break;
+                    case "Medium":
+                        factor1 = random.Next(11, 26);
+                        factor2 = random.Next(11, 26);
+                        break;
+                    case "Hard":
+                        factor1 = random.Next(26, 51);
+                        factor2 = random.Next(26, 51);
+                        break;
+                    default:
+                        throw new ArgumentException("Invalid difficulty level.");
+                }
+                PlayMultiplicationGame(factor1, factor2);
+            }
+            else
+            {
+                double rnd1;
+                double rnd2;
+
+                switch(difficultyLevel)
+                {
+                    case "Easy":
+                        rnd1 = random.Next(51);
+                        rnd2 = random.Next(51);
+                        break;
+                    case "Medium":
+                        rnd1 = random.Next(101);
+                        rnd2 = random.Next(101);
+                        break;
+                    case "Hard":
+                        rnd1 = random.Next(251);
+                        rnd2 = random.Next(251);
+                        break;
+                    default:
+                        throw new ArgumentException("Invalid difficulty level.");
+                }
+                PlayAdditionGame(rnd1, rnd2);
+                PlaySubtractionGame(rnd1, rnd2);
+
+            }
+        }
+
+
+
+            static void ReplayExit()
+        {
+            // repeat the game or exit
+            Console.WriteLine("Would you like to try again? (Y/N)");
+            string? response = Console.ReadLine();
+            if (response?.Trim().ToLower() == "y")
+            {
+                // choose current method in use in Program.cs
+                Console.WriteLine("Which game would you like to play? Enter 1 for addition, 2 for subtraction, 3 for multiplication, 4 for division:");
+                string? gameSelection = Console.ReadLine();
+                switch (gameSelection)
+                {
+                    case "1":
+                        PlayAdditionGame();
+                        break;
+                    case "2":
+                        PlaySubtractionGame();
+                        break;
+                    case "3":
+                        PlayMultiplicationGame();
+                        break;
+                    case "4":
+                        PlayDivisionGame();
+                        break;
+                    default:
+                        Console.WriteLine("Invalid game selection.");
+                        ReplayExit();
+                        break;
+                }
+            }
+            else
+            {
+                Console.WriteLine("Goodbye!");
+                MathGame.GameMenu.Menu();
+            }
+        }
+
+        public static bool PlayAdditionGame(double rnd1 = 0, double rnd2 = 0, int sum = 0)
+        {
+            DifficultyChoice();
             while (true)
             {
-                // generating two random numbers and their sum
-                Random random = new Random();
-                int rnd1 = random.Next(201);
-                int rnd2 = random.Next(201);
-                int sum = rnd1 + rnd2;
-
                 // answering the question and check if it is correct
                 Console.WriteLine($"What is {rnd1} + {rnd2}?");
                 if (int.TryParse(Console.ReadLine(), out int ansChk))
@@ -101,32 +167,15 @@ namespace GameEngine
                 {
                     Console.WriteLine("Invalid input");
                 }
-
-                // repeat the game or exit
-                Console.WriteLine("Would you like to try again? (Y/N)");
-                string? response = Console.ReadLine();
-                if (response?.Trim().ToLower() == "y")
-                {
-                    PlayAdditionGame();
-                }
-                else
-                {
-                    Console.WriteLine("Goodbye!");
-                    GameMenu.Menu();
-                }
+                ReplayExit();
             }
         }
 
-        internal void PlaySubtractionGame()
+        public static bool PlaySubtractionGame(double rnd1 = 0, double rnd2 = 0, double diff = 0)
         {
+            DifficultyChoice();
             while (true)
             {
-                // generating two random numbers and their difference
-                Random random = new Random();
-                double rnd1 = random.Next(201);
-                double rnd2 = random.Next(201);
-                double diff = rnd1 - rnd2;
-
                 // answering the question and check if it is correct
                 Console.WriteLine($"What is {rnd1} - {rnd2}?");
                 if (double.TryParse(Console.ReadLine(), out double ansChk))
@@ -144,97 +193,62 @@ namespace GameEngine
                 {
                     Console.WriteLine("Invalid input");
                 }
+                ReplayExit();
+            }
+        }
 
-                // repeat the game or exit
-                Console.WriteLine("Would you like to try again? (Y/N)");
-                string? response = Console.ReadLine();
-                if (response?.Trim().ToLower() == "y")
+        public static bool PlayMultiplicationGame(int factor1 = 0, int factor2 = 0, int product = 0)
+        {
+            DifficultyChoice();
+            while (true)
+            {
+                // answering the question and check if it is correct
+                Console.WriteLine($"What is {factor1} * {factor2}?");
+                if (double.TryParse(Console.ReadLine(), out double ansChk))
                 {
-                    PlaySubtractionGame();
+                    if (ansChk == product)
+                    {
+                        Console.WriteLine("Congrats you got the answer right");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Sorry you got the answer wrong, the correct answer is {product}");
+                    }
                 }
                 else
                 {
-                    Console.WriteLine("Goodbye!");
-                    GameMenu.Menu();
+                    Console.WriteLine("Invalid input");
                 }
+                ReplayExit();
             }
         }
 
-        internal void PlayMultiplicationGame()
+        public static bool PlayDivisionGame(int dividend = 0, int divisor = 0, double quotient = 0)
         {
-            // generating two random numbers and their product
-            Random random = new Random();
-            int factor1 = random.Next(11);
-            int factor2 = random.Next(11);
-            int product = factor1 * factor2;
-
-            // asking the question and checking the answer
-            Console.WriteLine($"What is {factor1} * {factor2}?");
-            int userAnswer;
-            while (!int.TryParse(Console.ReadLine(), out userAnswer))
+            DifficultyChoice();
+            while (true)
             {
-                Console.WriteLine("Invalid input, please enter an integer.");
-            }
-            if (userAnswer == product)
-            {
-                Console.WriteLine("Congrats you got the answer right");
-            }
-            else
-            {
-                Console.WriteLine($"Sorry you got the answer wrong, the correct answer is {product}");
-            }
-
-            // repeat the game or exit
-            Console.WriteLine("Would you like to try again? (Y/N)");
-            string? response = Console.ReadLine();
-            if (response?.Trim().ToLower() == "y")
-            {
-                PlayMultiplicationGame();
-            }
-            else
-            {
-                Console.WriteLine("Goodbye!");
-                GameMenu.Menu();
-            }
-        }
-
-        internal void PlayDivisionGame()
-        {
-            // generating two random numbers and their quotient
-            Random random = new Random();
-            int dividend = random.Next(101);
-            int divisor = random.Next(1, 11);
-            double quotient = (double)dividend / divisor;
-
-            // asking the question and checking the answer
-            Console.WriteLine($"What is {dividend} / {divisor}? (Round to 2 decimal places)");
-            double userAnswer;
-            while (!double.TryParse(Console.ReadLine(), out userAnswer))
-            {
-                Console.WriteLine("Invalid input, please enter a number.");
-            }
-            userAnswer = Math.Round(userAnswer, 2);
-            if (Math.Abs(userAnswer - quotient) < 0.01)
-            {
-                Console.WriteLine("Congrats you got the answer right");
-            }
-            else
-            {
-                Console.WriteLine($"Sorry you got the answer wrong, the correct answer is {quotient}");
+                // answering the question and check if it is correct
+                Console.WriteLine($"What is {dividend} / {divisor}? (Round to 2 decimal places)");
+                if (double.TryParse(Console.ReadLine(), out double ansChk))
+                {
+                    if (ansChk == quotient)
+                    {
+                        Console.WriteLine("Congrats you got the answer right");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Sorry you got the answer wrong, the correct answer is {quotient}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input");
+                }
+                ReplayExit();
             }
 
-            // repeat the game or exit
-            Console.WriteLine("Would you like to try again? (Y/N)");
-            string? response = Console.ReadLine();
-            if (response?.Trim().ToLower() == "y")
-            {
-                PlayDivisionGame();
-            }
-            else
-            {
-                Console.WriteLine("Goodbye!");
-                GameMenu.Menu();
-            }
+
         }
 
     }

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ags\\source\\repos\\Lowkey-wizard\\Academy.Console.MathGame\\Academy.Console.MathGame\\Academy.Console.MathGame.csproj": {}
+    "C:\\Users\\ags\\Source\\Repos\\MathGame.Lowkey-wizard\\Academy.Console.MathGame\\Academy.Console.MathGame.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ags\\source\\repos\\Lowkey-wizard\\Academy.Console.MathGame\\Academy.Console.MathGame\\Academy.Console.MathGame.csproj": {
+    "C:\\Users\\ags\\Source\\Repos\\MathGame.Lowkey-wizard\\Academy.Console.MathGame\\Academy.Console.MathGame.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ags\\source\\repos\\Lowkey-wizard\\Academy.Console.MathGame\\Academy.Console.MathGame\\Academy.Console.MathGame.csproj",
+        "projectUniqueName": "C:\\Users\\ags\\Source\\Repos\\MathGame.Lowkey-wizard\\Academy.Console.MathGame\\Academy.Console.MathGame.csproj",
         "projectName": "Academy.Console.MathGame",
-        "projectPath": "C:\\Users\\ags\\source\\repos\\Lowkey-wizard\\Academy.Console.MathGame\\Academy.Console.MathGame\\Academy.Console.MathGame.csproj",
+        "projectPath": "C:\\Users\\ags\\Source\\Repos\\MathGame.Lowkey-wizard\\Academy.Console.MathGame\\Academy.Console.MathGame.csproj",
         "packagesPath": "C:\\Users\\ags\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ags\\source\\repos\\Lowkey-wizard\\Academy.Console.MathGame\\Academy.Console.MathGame\\obj\\",
+        "outputPath": "C:\\Users\\ags\\Source\\Repos\\MathGame.Lowkey-wizard\\Academy.Console.MathGame\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
