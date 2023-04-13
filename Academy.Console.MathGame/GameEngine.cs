@@ -2,255 +2,253 @@ namespace MathGame
 {
     public partial class GameEngine
     {
-        
+        private static int correctAnswers;
+        private static int incorrectAnswers;
 
-        static void DifficultyChoice()
-        {
-            Console.WriteLine(@"What difficulty would you like to play at:
+        public enum DifficultyLevel
+{
+    E,
+    M,
+    H
+}
+
+public delegate bool GameDelegate(DifficultyLevel level, out double result, double rnd1 = 0, double rnd2 = 0);
+
+/*the GameDelegate allows for the use of the operator game methods to be passed as a parameter in PlayGame
+which in turn allows for the operator games parameter to be filled based on difficulty chosen*/
+public static void PlayGame(GameDelegate gameDelegate)
+{
+    // stores difficulty levels in a dictionary with a LINQ query to allow selected operator game as GameDelegate
+    //this then fills the parameters of the operator game depending on the chosen difficulty
+    Random random = new Random();
+    Dictionary<DifficultyLevel, Func<double>> methodMap = new Dictionary<DifficultyLevel, Func<double>>()
+    {
+        { DifficultyLevel.E, () => Enumerable.Range(0, int.MaxValue)
+            .Select(_ => gameDelegate != null && gameDelegate(DifficultyLevel.E, out double result, random.Next(0, 11), random.Next(0, 11))
+                ? result : (double?)null)
+            .FirstOrDefault(r => r != null) ?? 0 },
+
+        { DifficultyLevel.M, () => Enumerable.Range(0, int.MaxValue)
+            .Select(_ => gameDelegate != null && gameDelegate(DifficultyLevel.M, out double result, random.Next(0, 26), random.Next(0, 26))
+                ? result : (double?)null)
+            .FirstOrDefault(r => r != null) ?? 0 },
+
+        { DifficultyLevel.H, () => Enumerable.Range(0, int.MaxValue)
+            .Select(_ => gameDelegate != null && gameDelegate(DifficultyLevel.H, out double result, random.Next(0, 101), random.Next(0, 101))
+                ? result : (double?)null)
+            .FirstOrDefault(r => r != null) ?? 0 },
+    };
+
+    
+    Console.Clear();
+    Console.WriteLine(@"What difficulty would you like to play at:
             E - Easy
             M - Medium
             H - Hard");
-            string? diffSelected = Console.ReadLine()?.Trim().ToLowerInvariant();
-            switch (diffSelected)
-            {
-                case "e":
-                GameEngine.PlayGame("Easy");
-                break;
-                case "m":
-                GameEngine.PlayGame("Medium");
-                break;
-                case "h":
-                GameEngine.PlayGame("Hard");
-                break;
-                
-            }
-        } 
+    string? diffSelected = Console.ReadLine()?.Trim().ToUpperInvariant();
 
-        static void PlayGame(String difficultyLevel)
+    if (Enum.TryParse(diffSelected, out DifficultyLevel level))
+    {
+        double? resultNullable = methodMap[level].Invoke();
+        double result = resultNullable.HasValue ? resultNullable.Value : 0;
+        gameDelegate.Invoke(level, out result);
+
+    }
+    else
+    {
+        throw new ArgumentException("Invalid difficulty level.");
+    }
+}
+
+        public static bool PlayAdditionGame(DifficultyLevel level, out double result, double rnd1 = 0, double rnd2 = 0)
         {
-            Random random = new Random();
-            if (PlayDivisionGame())
+            double sum = rnd1 + rnd2;
+            while (true)
             {
-                int dividend;
-                int divisor;
-
-                switch(difficultyLevel)
+                Console.WriteLine($"You have gotten {correctAnswers} right and {incorrectAnswers} wrong.");
+                // answer the question and check if it is correct
+                Console.WriteLine($"What is {rnd1} + {rnd2}?");
+                if (double.TryParse(Console.ReadLine(), out double ansChk))
                 {
-                    case "Easy":
-                        dividend = random.Next(26);
-                        divisor = random.Next(1, 11);
-                        break;
-                    case "Medium":
-                        dividend = random.Next(51);
-                        divisor = random.Next(1, 25);
-                        break;
-                    case "Hard":
-                        dividend = random.Next(101);
-                        divisor = random.Next(1, 51);                       
-                        break;
-                    default:
-                        throw new ArgumentException("Invalid difficulty level.");
+                    if (ansChk == sum)
+                    {
+                        Console.WriteLine("Congrats you got the answer right");
+                        result = sum;
+                        Score(true);
+                        ReplayExit(PlayAdditionGame);
+                        return true;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Sorry you got the answer wrong, the correct answer is {sum}");
+                        result = 0;
+                        Score(false);
+                        ReplayExit(PlayAdditionGame);
+                        return false;
+                    }
                 }
-                PlayDivisionGame(dividend, divisor);
-
-            }
-            else if (PlayMultiplicationGame())
-            {
-                int factor1;
-                int factor2;
-
-                switch(difficultyLevel)
+                else
                 {
-                    case "Easy":
-                        factor1 = random.Next(11);
-                        factor2 = random.Next(11);
-                        break;
-                    case "Medium":
-                        factor1 = random.Next(11, 26);
-                        factor2 = random.Next(11, 26);
-                        break;
-                    case "Hard":
-                        factor1 = random.Next(26, 51);
-                        factor2 = random.Next(26, 51);
-                        break;
-                    default:
-                        throw new ArgumentException("Invalid difficulty level.");
+                    Console.WriteLine("Invalid input");
+                    result = 0;
+                    Score(false);
+                    ReplayExit(PlayAdditionGame);
+                    return false;
                 }
-                PlayMultiplicationGame(factor1, factor2);
-            }
-            else
-            {
-                double rnd1;
-                double rnd2;
-
-                switch(difficultyLevel)
-                {
-                    case "Easy":
-                        rnd1 = random.Next(51);
-                        rnd2 = random.Next(51);
-                        break;
-                    case "Medium":
-                        rnd1 = random.Next(101);
-                        rnd2 = random.Next(101);
-                        break;
-                    case "Hard":
-                        rnd1 = random.Next(251);
-                        rnd2 = random.Next(251);
-                        break;
-                    default:
-                        throw new ArgumentException("Invalid difficulty level.");
-                }
-                PlayAdditionGame(rnd1, rnd2);
-                PlaySubtractionGame(rnd1, rnd2);
-
             }
         }
 
+        public static bool PlaySubtractionGame(DifficultyLevel level, out double result, double rnd1, double rnd2 = 0)
+            {
+                Console.WriteLine($"You have gotten {correctAnswers} right and {incorrectAnswers} wrong.");
+                // answer the question and check if it is correct
+                double diff = rnd1 - rnd2;
+                while (true)
+                {
+                    Console.WriteLine($"What is {rnd1} - {rnd2}?");
+                    if (double.TryParse(Console.ReadLine(), out double ansChk))
+                    {
+                        if (ansChk == diff)
+                        {
+                            Console.WriteLine("Congrats you got the answer right");
+                            result = diff;
+                            Score(true);
+                            ReplayExit(PlaySubtractionGame);
+                            return true;
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Sorry you got the answer wrong, the correct answer is {diff}");
+                            result = 0;
+                            Score(false);
+                            ReplayExit(PlaySubtractionGame);
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid input");
+                        result = 0;
+                        Score(false);
+                        ReplayExit(PlaySubtractionGame);
+                        return false;
+                    }
+                }
+            }
 
+        public static bool PlayMultiplicationGame(DifficultyLevel level, out double result, double rnd1 = 0, double rnd2 = 0)
+            {
+                Console.WriteLine($"You have gotten {correctAnswers} right and {incorrectAnswers} wrong.");
+                double product = rnd1 * rnd2;
+                while (true)
+                {
+                    // answer the question and check if it is correct
+                    Console.WriteLine($"What is {rnd1} * {rnd2}?");
+                    if (double.TryParse(Console.ReadLine(), out double ansChk))
+                    {
+                        if (ansChk == product)
+                        {
+                            Console.WriteLine("Congrats you got the answer right");
+                            result = product;
+                            Score(true);
+                            ReplayExit(PlayMultiplicationGame);
+                            return true;
 
-            static void ReplayExit()
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Sorry you got the answer wrong, the correct answer is {product}");
+                            result = 0;
+                            Score(false);
+                            ReplayExit(PlayMultiplicationGame);
+                            return false;
+
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid input");
+                        result = 0;
+                        Score(false);
+                        ReplayExit(PlayMultiplicationGame);
+                        return false;
+
+                    }
+                }
+            }
+
+        public static bool PlayDivisionGame(DifficultyLevel level, out double result, double rnd1 = 0, double rnd2 = 0)
+            {
+                Console.WriteLine($"You have gotten {correctAnswers} right and {incorrectAnswers} wrong.");
+                // answer the question and check if it is correct
+                double quotient = Math.Round(rnd1 / (double)rnd2, 2);
+                while (true)
+                {
+                    Console.WriteLine($"What is {rnd1} / {rnd2}? (To two decimal places)");
+                    if (double.TryParse(Console.ReadLine(), out double ansChk))
+                    {
+                        if (ansChk == quotient)
+                        {
+                            Console.WriteLine("Congrats you got the answer right");
+                            result = quotient;
+                            Score(true);
+                            ReplayExit(PlayDivisionGame);
+                            return true;
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Sorry you got the answer wrong, the correct answer is {quotient}");
+                            result = 0;
+                            Score(false);
+                            ReplayExit(PlayDivisionGame);
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid input");
+                        result = 0;
+                        Score(false);
+                        ReplayExit(PlayDivisionGame);
+                        return false;
+                    }
+                }
+            }
+
+        public static void Score(bool isCorrect)
+            {
+                if (isCorrect)
+                {
+                    correctAnswers++;
+                }
+                else
+                {
+                    incorrectAnswers++;
+                }
+            }
+
+//allows for the ReplayExit method to repeat the current running operator game
+        public static void ReplayExit(GameDelegate gameDelegate)
         {
             // repeat the game or exit
             Console.WriteLine("Would you like to try again? (Y/N)");
             string? response = Console.ReadLine();
             if (response?.Trim().ToLower() == "y")
             {
-                // choose current method in use in Program.cs
-                Console.WriteLine("Which game would you like to play? Enter 1 for addition, 2 for subtraction, 3 for multiplication, 4 for division:");
-                string? gameSelection = Console.ReadLine();
-                switch (gameSelection)
-                {
-                    case "1":
-                        PlayAdditionGame();
-                        break;
-                    case "2":
-                        PlaySubtractionGame();
-                        break;
-                    case "3":
-                        PlayMultiplicationGame();
-                        break;
-                    case "4":
-                        PlayDivisionGame();
-                        break;
-                    default:
-                        Console.WriteLine("Invalid game selection.");
-                        ReplayExit();
-                        break;
-                }
+                PlayGame(gameDelegate);
+
+            }
+            else if (response?.Trim().ToLower() == "n")
+            {
+                Console.WriteLine("Back to the Main Menu!");
+                GameMenu.Menu();
             }
             else
             {
-                Console.WriteLine("Goodbye!");
-                MathGame.GameMenu.Menu();
+                Console.WriteLine("Invalid input, please try again");
+                ReplayExit(gameDelegate);
             }
         }
-
-        public static bool PlayAdditionGame(double rnd1 = 0, double rnd2 = 0, int sum = 0)
-        {
-            DifficultyChoice();
-            while (true)
-            {
-                // answering the question and check if it is correct
-                Console.WriteLine($"What is {rnd1} + {rnd2}?");
-                if (int.TryParse(Console.ReadLine(), out int ansChk))
-                {
-                    if (ansChk == sum)
-                    {
-                        Console.WriteLine("Congrats you got the answer right");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Sorry you got the answer wrong, the correct answer is {sum}");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Invalid input");
-                }
-                ReplayExit();
-            }
-        }
-
-        public static bool PlaySubtractionGame(double rnd1 = 0, double rnd2 = 0, double diff = 0)
-        {
-            DifficultyChoice();
-            while (true)
-            {
-                // answering the question and check if it is correct
-                Console.WriteLine($"What is {rnd1} - {rnd2}?");
-                if (double.TryParse(Console.ReadLine(), out double ansChk))
-                {
-                    if (ansChk == diff)
-                    {
-                        Console.WriteLine("Congrats you got the answer right");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Sorry you got the answer wrong, the correct answer is {diff}");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Invalid input");
-                }
-                ReplayExit();
-            }
-        }
-
-        public static bool PlayMultiplicationGame(int factor1 = 0, int factor2 = 0, int product = 0)
-        {
-            DifficultyChoice();
-            while (true)
-            {
-                // answering the question and check if it is correct
-                Console.WriteLine($"What is {factor1} * {factor2}?");
-                if (double.TryParse(Console.ReadLine(), out double ansChk))
-                {
-                    if (ansChk == product)
-                    {
-                        Console.WriteLine("Congrats you got the answer right");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Sorry you got the answer wrong, the correct answer is {product}");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Invalid input");
-                }
-                ReplayExit();
-            }
-        }
-
-        public static bool PlayDivisionGame(int dividend = 0, int divisor = 0, double quotient = 0)
-        {
-            DifficultyChoice();
-            while (true)
-            {
-                // answering the question and check if it is correct
-                Console.WriteLine($"What is {dividend} / {divisor}? (Round to 2 decimal places)");
-                if (double.TryParse(Console.ReadLine(), out double ansChk))
-                {
-                    if (ansChk == quotient)
-                    {
-                        Console.WriteLine("Congrats you got the answer right");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Sorry you got the answer wrong, the correct answer is {quotient}");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Invalid input");
-                }
-                ReplayExit();
-            }
-
-
-        }
-
     }
 }
 

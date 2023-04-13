@@ -1,11 +1,28 @@
 namespace MathGame
 {
-    public partial class GameMenu
+    public partial class GameMenu : GameEngine
     {
+        private static string? name; // private variable to store name so that user is not prompted again
+        
+        public static string GetName(string? name = "")
+        {
+            //makes sure that user input is not null or white spaces, will prompt again until filled
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                Console.WriteLine("Please enter your name:");
+                name = Console.ReadLine();
+                return GetName(name);
+            }
+            else
+            {
+                return name;
+            }
+        }
+
         public static void Menu()
         {
-            Console.WriteLine("Please enter your name:");
-            string? name = Console.ReadLine();
+            Console.Clear();
+            if (name == null) name = GetName();
             Console.WriteLine("_________________________________");
             Console.WriteLine($"Hello {name}, today is {DateTime.Now:d}. Would you like to Play a math game?");
             Console.WriteLine(@"What game would you like to select below: 
@@ -20,16 +37,16 @@ namespace MathGame
             switch (gameSelected)
             {
                 case "a":
-                    MathGame.GameEngine.PlayAdditionGame();
+                    PlayGame(PlayAdditionGame);
                     break;
                 case "s":
-                    MathGame.GameEngine.PlaySubtractionGame();
+                    PlayGame(PlaySubtractionGame);
                     break;
                 case "m":
-                    MathGame.GameEngine.PlayMultiplicationGame();
+                    PlayGame(PlayMultiplicationGame);
                     break;
                 case "d":
-                    MathGame.GameEngine.PlayDivisionGame();
+                    PlayGame(PlayDivisionGame);
                     break;
                 case "q":
                     Console.WriteLine("Goodbye!");
@@ -41,6 +58,5 @@ namespace MathGame
                     break;
             }
         }
-
     }
 }

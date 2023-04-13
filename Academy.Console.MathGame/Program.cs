@@ -1,11 +1,11 @@
 ﻿namespace MathGame
 {
 
-    public class Program
+    public partial class Program : GameMenu
     {
         static void Main(string[] args)
         {
-            GameMenu.Menu();
+            Menu();
         }
     }
 }
