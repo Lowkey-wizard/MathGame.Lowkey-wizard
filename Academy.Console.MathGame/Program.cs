@@ -1,7 +1,7 @@
 ﻿namespace MathGame
 {
 
-    public partial class Program : GameMenu
+    internal class Program : GameMenu
     {
         static void Main(string[] args)
         {

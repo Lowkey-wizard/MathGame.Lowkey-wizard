@@ -1,6 +1,6 @@
 namespace MathGame
 {
-    public partial class GameMenu : GameEngine
+    internal class GameMenu : GameEngine
     {
         private static string? name; // private variable to store name so that user is not prompted again
         
@@ -19,12 +19,13 @@ namespace MathGame
             }
         }
 
-        public static void Menu()
+        internal static void Menu()
         {
             Console.Clear();
             if (name == null) name = GetName();
             Console.WriteLine("_________________________________");
             Console.WriteLine($"Hello {name}, today is {DateTime.Now:d}. Would you like to Play a math game?");
+            Console.WriteLine($"Your current score is Right:{GameEngine.getCorrectAnswers()} Wrong:{GameEngine.getIncorrectAnswers()}.");
             Console.WriteLine(@"What game would you like to select below: 
                 A - Addition
                 S - Subtraction
@@ -50,6 +51,7 @@ namespace MathGame
                     break;
                 case "q":
                     Console.WriteLine("Goodbye!");
+                    Console.WriteLine($"Your final score is Right:{GameEngine.getCorrectAnswers()} Wrong:{GameEngine.getIncorrectAnswers()}.");
                     Environment.Exit(0);
                     break;
                 default:

@@ -7,4 +7,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="AspNet\**" />
+    <EmbeddedResource Remove="AspNet\**" />
+    <None Remove="AspNet\**" />
+  </ItemGroup>
+
 </Project>
