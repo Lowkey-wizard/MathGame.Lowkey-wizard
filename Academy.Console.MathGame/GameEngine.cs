@@ -1,9 +1,8 @@
+using Academy.Console.MathGame.Models;
 namespace MathGame
 {
     internal class GameEngine
     {
-        private static int correctAnswers;
-        private static int incorrectAnswers;
 
         public enum DifficultyLevel
         {
@@ -70,7 +69,7 @@ namespace MathGame
                     {
                         Console.WriteLine("Congrats you got the answer right");
                         result = sum;
-                        Score(true);
+                        Game.Score(true);
                         ReplayExit(PlayAdditionGame);
                         return true;
                     }
@@ -78,7 +77,7 @@ namespace MathGame
                     {
                         Console.WriteLine($"Sorry you got the answer wrong, the correct answer is {sum}");
                         result = 0;
-                        Score(false);
+                        Game.Score(false);
                         ReplayExit(PlayAdditionGame);
                         return false;
                     }
@@ -87,7 +86,7 @@ namespace MathGame
                 {
                     Console.WriteLine("Invalid input");
                     result = 0;
-                    Score(false);
+                    Game.Score(false);
                     ReplayExit(PlayAdditionGame);
                     return false;
                 }
@@ -107,7 +106,7 @@ namespace MathGame
                     {
                         Console.WriteLine("Congrats you got the answer right");
                         result = diff;
-                        Score(true);
+                        Game.Score(true);
                         ReplayExit(PlaySubtractionGame);
                         return true;
                     }
@@ -115,7 +114,7 @@ namespace MathGame
                     {
                         Console.WriteLine($"Sorry you got the answer wrong, the correct answer is {diff}");
                         result = 0;
-                        Score(false);
+                        Game.Score(false);
                         ReplayExit(PlaySubtractionGame);
                         return false;
                     }
@@ -124,7 +123,7 @@ namespace MathGame
                 {
                     Console.WriteLine("Invalid input");
                     result = 0;
-                    Score(false);
+                    Game.Score(false);
                     ReplayExit(PlaySubtractionGame);
                     return false;
                 }
@@ -144,7 +143,7 @@ namespace MathGame
                     {
                         Console.WriteLine("Congrats you got the answer right");
                         result = product;
-                        Score(true);
+                        Game.Score(true);
                         ReplayExit(PlayMultiplicationGame);
                         return true;
                     }
@@ -152,7 +151,7 @@ namespace MathGame
                     {
                         Console.WriteLine($"Sorry you got the answer wrong, the correct answer is {product}");
                         result = 0;
-                        Score(false);
+                        Game.Score(false);
                         ReplayExit(PlayMultiplicationGame);
                         return false;
                     }
@@ -161,7 +160,7 @@ namespace MathGame
                 {
                     Console.WriteLine("Invalid input");
                     result = 0;
-                    Score(false);
+                    Game.Score(false);
                     ReplayExit(PlayMultiplicationGame);
                     return false;
                 }
@@ -181,7 +180,7 @@ namespace MathGame
                     {
                         Console.WriteLine("Congrats you got the answer right");
                         result = quotient;
-                        Score(true);
+                        Game.Score(true);
                         ReplayExit(PlayDivisionGame);
                         return true;
                     }
@@ -189,7 +188,7 @@ namespace MathGame
                     {
                         Console.WriteLine($"Sorry you got the answer wrong, the correct answer is {quotient}");
                         result = 0;
-                        Score(false);
+                        Game.Score(false);
                         ReplayExit(PlayDivisionGame);
                         return false;
                     }
@@ -198,22 +197,10 @@ namespace MathGame
                 {
                     Console.WriteLine("Invalid input");
                     result = 0;
-                    Score(false);
+                    Game.Score(false);
                     ReplayExit(PlayDivisionGame);
                     return false;
                 }
-            }
-        }
-
-        internal static void Score(bool isCorrect)
-        {
-            if (isCorrect)
-            {
-                correctAnswers++;
-            }
-            else
-            {
-                incorrectAnswers++;
             }
         }
 
@@ -236,15 +223,6 @@ namespace MathGame
                 Console.WriteLine("Invalid input, please try again");
                 ReplayExit(gameDelegate);
             }
-        }
-
-        internal static int getCorrectAnswers()
-        {
-            return correctAnswers;
-        }
-        internal static int getIncorrectAnswers()
-        {
-            return incorrectAnswers;
         }
     }
 }

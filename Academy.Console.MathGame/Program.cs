@@ -1,12 +1,11 @@
-﻿namespace MathGame
-{
+﻿namespace MathGame;
 
-    internal class Program : GameMenu
+
+internal class Program : GameMenu
+{
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
-        {
-            Menu();
-        }
+        Menu();
     }
 }
 

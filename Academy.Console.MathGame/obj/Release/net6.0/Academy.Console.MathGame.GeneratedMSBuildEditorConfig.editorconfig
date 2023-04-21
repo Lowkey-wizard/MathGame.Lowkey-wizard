@@ -8,4 +8,4 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Academy.Console.MathGame
-build_property.ProjectDir = C:\Users\ags\Source\Repos\Lowkey-wizard\Academy.Console.MathGame\MathGame.Lowkey-wizard\
+build_property.ProjectDir = C:\Users\ags\source\repos\MathGame.Lowkey-wizard\Academy.Console.MathGame\

@@ -1,3 +1,4 @@
+using Academy.Console.MathGame.Models;
 namespace MathGame
 {
     internal class GameMenu : GameEngine
@@ -25,7 +26,7 @@ namespace MathGame
             if (name == null) name = GetName();
             Console.WriteLine("_________________________________");
             Console.WriteLine($"Hello {name}, today is {DateTime.Now:d}. Would you like to Play a math game?");
-            Console.WriteLine($"Your current score is Right:{GameEngine.getCorrectAnswers()} Wrong:{GameEngine.getIncorrectAnswers()}.");
+            Console.WriteLine($"Your current score is Right:{Game.CorrectAnswers} Wrong:{Game.IncorrectAnswers}.");
             Console.WriteLine(@"What game would you like to select below: 
                 A - Addition
                 S - Subtraction
@@ -51,7 +52,7 @@ namespace MathGame
                     break;
                 case "q":
                     Console.WriteLine("Goodbye!");
-                    Console.WriteLine($"Your final score is Right:{GameEngine.getCorrectAnswers()} Wrong:{GameEngine.getIncorrectAnswers()}.");
+                    Console.WriteLine($"Your final score is Right:{Game.CorrectAnswers} Wrong:{Game.IncorrectAnswers}.");
                     Environment.Exit(0);
                     break;
                 default:
